@@ -2,7 +2,7 @@
 name = "PacMan"
 version = "0.1.0"
 description = ""
-authors = ["Edwige <edwige.loems@ulb.be>"]
+authors = ["Edwige <edwige.loems@ulb.be>", "Axelle <axelle.deghorain@ulb.be>", "Loïc <loic.bermudez.arroyo@ulb.be>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
