@@ -149,10 +149,13 @@ class GUIGame(Game):
                 self.next_state()
             pygame.time.wait(150)
             self.draw()
+        self.end_level(agent)
+
             
     def end_level(self, agent):
         self.draw(True)
-        pygame.time.wait(1500)
+        pygame.time.wait(2000)
+
         if self.is_win() :
             if self.level + 1 <= 2 : 
                 self.next_level()
