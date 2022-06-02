@@ -36,7 +36,6 @@ def main():
     game.next_tick(agent)
     
     #end the screen
-    game.end_game()
     game.cleanup_pygame()
     
 
