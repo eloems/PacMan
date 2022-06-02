@@ -1,3 +1,4 @@
+import argparse
 from game import GUIGame
 
 def main():
