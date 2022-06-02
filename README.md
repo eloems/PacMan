@@ -1,20 +1,14 @@
 # PacMan
-AI PacMan project repository 
+To launch the game in the player mode :
 
-exemples du prof : SNAKE -> https://github.com/iridia-ulb/AI-book/tree/main/Snake
+poetry run python main.py -p
 
-main.py :  - pas beaucoup de lignes, juste les arguments à passer dans l'execution ( comme le prof le souhaite , exemple dans les autres projets)
-           - lance le jeu, et "manager" du jeu
-game.py : - définition du jeu et de l'interface
-          - il faut rajouter le mouvement précédent du pacman ( je veux bien le faire)
-ghost.py : - comportement des fantomes
-search.py : - fonction de recherche pour connaitre le path vers la target
-            - contient une classe NODE qui permet le backTracking du chemin à parcourir à partir du node target
-utils.py : - juste des variables générales qui ne changent pas
+The player mode allows the manual maneuver of Pacman through the game. Use the direction key to move the Pacman and start the game. Once level one is complete, level two will automatically launch. Press any direction key to start the game. When level two is complete, the game will automatically close.
 
-Autre fichier à implémenter : pacman.py ( avec le comportement du pacman qui appelera surement la classe search pour la fonction AStar
++++
 
-Donc EDWIGE , je crois que pour l'interface c'est juste dans Game.py qu'il faut bouger ( et peut etre un peu dans Main.py)
-et LOIC , il faut créer un fichier pacman.py qui contient une fonction getMovePacman(pos,grid) et implémenter Astar dans search.py
-(AXELLE, iplémenter le comportemant du deuxième fantome )
+To launch the game with Pacman A* :
 
+poetry run python main.py -x
+
+The game will automatically start, and when level one is over, it will automatically skip to the next level. Once level two is complete, the game will automatically close.
