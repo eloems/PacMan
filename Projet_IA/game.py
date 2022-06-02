@@ -5,8 +5,9 @@ from pathlib import Path
 import utils,pygame
 
 class Game:
-    def __init__(self):
-        self.grid = utils.LEVEL_1
+    def __init__(self, lvl = 1):
+        self.level = lvl
+        self.grid = utils.LEVEL[self.level]
         self.pacman_alive=True
         
         pos_p = self.init_pos(utils.PACMAN_CHAR,1)
@@ -52,6 +53,22 @@ class Game:
     def print_grid(self):
         for row in range(len(self.grid)):
             print(''.join(self.grid[row]))
+            
+    def next_level(self) :
+        self.level = self.level +1
+        self.grid = utils.LEVEL[self.level]
+        
+        self.pacman_alive=True
+        
+        pos_p = self.init_pos(utils.PACMAN_CHAR,1)
+        self.pacman = Pacman(pos_p)
+        
+        pos_g = self.init_pos(utils.GHOST_CHAR,2)
+        self.ghosts = Ghost(pos_g)
+        
+        self.score = 0
+        self.nbr_items = self.init_nbr_items()
+        
 
     def start(self):
         while self.is_pacman_alive() and not self.is_win():
@@ -125,7 +142,7 @@ class GUIGame(Game):
     def __init__(self):
         super(GUIGame,self).__init__()
 
-    def next_tick(self,agent = None):
+    def next_tick(self,agent ):
         while self.is_pacman_alive() and not self.is_win():
             self.process_event(agent)
             if agent != None :
@@ -133,9 +150,13 @@ class GUIGame(Game):
             pygame.time.wait(150)
             self.draw()
             
-    def end_game(self):
+    def end_level(self, agent):
         self.draw(True)
         pygame.time.wait(1500)
+        if self.is_win() :
+            if self.level + 1 <= 2 : 
+                self.next_level()
+                self.next_tick(agent)
         
     def init_pygame(self):
         pygame.init()
