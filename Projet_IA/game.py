@@ -69,13 +69,18 @@ class Game:
         return gap, vertical_start, horizontal_start, menu_start
 
 
-    def next_state(self):
-        mv_pacman = self.pacman.getMovePacman(self.grid)
+    def next_state(self,move = None):
+        mv_pacman = None
+        if move != None :
+            mv_pacman = self.pacman.setMovePacman(move,self.grid)
+        else :
+            mv_pacman = self.pacman.getMovePacman(self.grid)
         mv_ghost = self.ghosts.getMoveGhost(self.grid, self.pacman.direction)
-        self.apply_mv(mv_ghost,mv_pacman) 
+        self.apply_mv(mv_ghost,mv_pacman)
+
 
     def apply_mv(self,g,p):
-        #ATTENTION aux items quand un ghost va dessus = G
+
         pacman_oldpos = p[0]
         pacman_newpos = p[1]
         for i in range(len(g)):
@@ -94,19 +99,21 @@ class Game:
                 self.grid[ghost_oldpos[0]][ghost_oldpos[1]] = utils.ITEM_CHAR
             else :
                 self.grid[ghost_oldpos[0]][ghost_oldpos[1]] = utils.EMPTY_CHAR
+                
+            if self.grid[pacman_oldpos[0]][pacman_oldpos[1]]!= utils.GHOST_CHAR :
                 self.grid[pacman_oldpos[0]][pacman_oldpos[1]] = utils.EMPTY_CHAR
                 
             if self.grid[ghost_newpos[0]][ghost_newpos[1]]== utils.ITEM_CHAR :
                 self.grid[ghost_newpos[0]][ghost_newpos[1]] = utils.GHOST_ITEM_CHAR
-            elif self.grid[ghost_newpos[0]][ghost_newpos[1]]== utils.EMPTY_CHAR :
-                self.grid[ghost_newpos[0]][ghost_newpos[1]] = utils.GHOST_CHAR
             elif self.grid[ghost_newpos[0]][ghost_newpos[1]]== utils.GHOST_CHAR :
                 self.grid[ghost_newpos[0]][ghost_newpos[1]] = utils.GHOST_GHOST_CHAR
-                
+            elif self.grid[ghost_newpos[0]][ghost_newpos[1]]== utils.EMPTY_CHAR :
+                self.grid[ghost_newpos[0]][ghost_newpos[1]] = utils.GHOST_CHAR
+                   
             if self.grid[pacman_newpos[0]][pacman_newpos[1]]== utils.ITEM_CHAR :
                 self.grid[pacman_newpos[0]][pacman_newpos[1]] = utils.PACMAN_CHAR
                 self.score+=1
-            elif self.grid[pacman_newpos[0]][pacman_newpos[1]]== utils.EMPTY_CHAR :
+            elif self.grid[pacman_newpos[0]][pacman_newpos[1]]== utils.EMPTY_CHAR:
                 self.grid[pacman_newpos[0]][pacman_newpos[1]] = utils.PACMAN_CHAR
 
 class GUIGame(Game):
@@ -118,11 +125,14 @@ class GUIGame(Game):
     def __init__(self):
         super(GUIGame,self).__init__()
 
-    def next_tick(self):
+    def next_tick(self,agent = None):
         while self.is_pacman_alive() and not self.is_win():
-            self.next_state()
+            self.process_event(agent)
+            if agent != None :
+                self.next_state()
             pygame.time.wait(150)
             self.draw()
+            
     def end_game(self):
         self.draw(True)
         pygame.time.wait(1500)
@@ -132,7 +142,25 @@ class GUIGame(Game):
         pygame.font.init()
         self.set_window_size(GUIGame.DEFAULT_WIDTH, GUIGame.DEFAULT_HEIGHT)
         pygame.display.set_caption(utils.TITLE)
-        self.clock = pygame.time.Clock()
+        
+    def process_event(self, agent):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT :
+                self.cleanup_pygame()
+                
+            elif event.type == pygame.KEYDOWN and agent == None:
+                if event.key == pygame.K_UP:
+                    self.next_state(utils.UP)
+                elif event.key == pygame.K_RIGHT:
+                    self.next_state(utils.RIGHT)
+                elif event.key == pygame.K_DOWN:
+                    self.next_state(utils.DOWN)
+                elif event.key == pygame.K_LEFT:
+                    self.next_state(utils.LEFT)
+
+            elif event.type == pygame.VIDEORESIZE:
+                self.set_window_size(event.w, event.h)
+
 
     def set_window_size(self,width,height):
         self.screen = pygame.display.set_mode(size=(width,height), flags = pygame.RESIZABLE)
